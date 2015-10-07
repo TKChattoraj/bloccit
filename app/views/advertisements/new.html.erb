@@ -1,0 +1,33 @@
+<h1>New Advertisements</h1>
+
+<div class="row">
+  <div class="col-md-4">
+    <p>Guidelines for Advertisements</p>
+    <ul>
+      <li>Make it snappy.</li>
+      <li>A good slogan won't hurt</li>
+      <li>Want folks to not "Skip Add"</li>
+    </ul>
+  </div>
+  <div class="col-md-8">
+    <%= form_for @advertisement do |ad| %>
+      <div class="form-group">
+        <%= ad.label :title %>
+        <%= ad.text_field :title, class: 'form-control', placeholder: "Enter Ad Title" %>
+      </div>
+      <div class="form-group">
+        <%= ad.label :copy %>
+        <%= ad.text_field :copy, rows: 8, class: 'form-control', placeholder: "Enter Ad Copy" %>
+      </div>
+      <div class="form-group">
+        <%= ad.label :price %>
+        <%= ad.text_field :price, class: 'form-control', placeholder: "Enter Price" %>
+      </div>
+
+
+      <div class="form-group">
+        <%= ad.submit "Save", class: 'btn-success' %>
+      </div>
+    <% end %>
+  </div>
+</div>
