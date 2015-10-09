@@ -91,4 +91,43 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns (:question)).to eq(test_question)
     end
   end
+
+  describe "PUT #update" do
+    it "updates question with expected attributes" do
+      new_title = "Revised Question Title"
+      new_body = "Revised Question Body"
+      new_resolved = true
+
+      put :update, id: test_question.id, question: {title: new_title, body: new_body, resolved: new_resolved}
+      updated_question = assigns(:question)
+      expect(updated_question.id).to eq(test_question.id)
+      expect(updated_question.title).to eq(new_title)
+      expect(updated_question.body).to eq(new_body)
+      expect(updated_question.resolved).to eq(new_resolved)
+    end
+
+    it "redirects to the updated question" do
+      new_title = "Revised Question Title"
+      new_body = "Revised Question Body"
+      new_resolved = true
+
+      put :update, id: test_question.id, question: {title: new_title, body: new_body, resolved: new_resolved}
+      expect(response).to redirect_to test_question
+    end
+  end
+
+  describe "DELETE destroy" do
+    it "deletes the specified question" do
+      delete :destroy, {id: test_question.id}
+      count = Question.where({id: test_question.id}).size
+      expect(count).to eq 0
+    end
+
+    it "redirects to the Question index action" do
+      delete :destroy, {id: test_question.id}
+      expect(response).to redirect_to questions_path
+    end
+  end
+
+
 end
