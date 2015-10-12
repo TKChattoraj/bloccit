@@ -1,10 +1,20 @@
 include RandomData
 
+#Create tables
+15.times do
+  Topic.create!(
+    name: RandomData.random_sentence,
+    description: RandomData.random_paragraph
+    )
+  end
+topics = Topic.all
+
 # Create posts
 50.times do
   Post.create!(
     title: RandomData.random_sentence,
-    body: RandomData.random_paragraph
+    body: RandomData.random_paragraph,
+    topic: topics.sample
   )
 end
 posts = Post.all
@@ -18,5 +28,6 @@ posts = Post.all
 end
 
 puts "Seed finished"
-puts "#{Post.count} posts created"
-puts "#{Comment.count} comments created"
+puts "#{Topic.count} topics created"
+puts "#{Post.count} posts created and associated to a topic"
+puts "#{Comment.count} comments created and associated to a post"
