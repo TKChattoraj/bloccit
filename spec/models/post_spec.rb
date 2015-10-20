@@ -7,7 +7,6 @@ RSpec.describe Post, type: :model do
   let(:post) {topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph)}
   it {should belong_to(:topic)}
 
-  it {should belong_to(:topic)}
   it {should validate_presence_of(:title)}
   it {should validate_presence_of(:body)}
   it {should validate_presence_of(:topic)}
