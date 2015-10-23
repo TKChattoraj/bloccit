@@ -64,3 +64,5 @@ gem 'turbolinks'
   #gem 'spring'
 #end
 gem 'bootstrap-sass'
+# Used for encrypting User passwords
+gem 'bcrypt'
