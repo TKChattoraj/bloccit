@@ -93,16 +93,15 @@ end
 # end "GET edit tests"
 
 describe "PUT update" do
+  new_name = RandomData.random_name
+  new_description = RandomData.random_paragraph
   it "updates topic with expected attributes" do
-    new_name = RandomData.random_sentence
-    new_description = RandomData.random_paragraph
-
     put :update, id: my_topic.id, topic: {name: new_name, description: new_description}
 
-    updated_topic = assign(:topic)
+    updated_topic = assigns(:topic)
     expect(updated_topic.id).to eq(my_topic.id)
     expect(updated_topic.name).to eq(new_name)
-    expect(update_topic.description).to eq(new_description)
+    expect(updated_topic.description).to eq(new_description)
   end
 
   it "redirects to the updated topic" do

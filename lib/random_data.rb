@@ -16,6 +16,25 @@ module RandomData
     sentence.capitalize << "."
   end
 
+  def random_name
+    first_name = random_word.capitalize
+    last_name = random_word.capitalize
+    "#{first_name} #{last_name}"
+  end
+
+  def random_email
+    "#{random_word}@#{random_word}.com"
+  end
+
+  def random_password
+    password = random_word
+    until password.size > 5 do
+      password = random_word
+    end
+    password
+  end
+
+
   def random_word
     letters = ('a'..'z').to_a
     letters.shuffle!
