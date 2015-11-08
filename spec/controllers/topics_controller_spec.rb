@@ -165,6 +165,113 @@ context "member user" do
   end #end of the Delete destroy tests
 end # end of member context
 
+
+context "moderator user" do
+  before do
+    user = User.create!(name: "Bloccit User", email: "user@bloccit.com", password: "helloworld", role: :moderator)
+    create_session(user)
+  end
+
+  describe "GET index" do
+    it "returns http success" do
+     get :index
+     expect(response).to have_http_status(:success)
+   end
+
+    it "renders the index view" do
+      get :index
+      expect(response).to render_template(:index)
+    end
+
+    it "assigns @topics to the array of all topics" do
+      get :index
+      expect(assigns(:topics)).to eq([my_topic])
+    end
+  end  #end of the  "Get Index"
+
+  describe "GET show" do
+    it "returns http success" do
+      get :show, {id: my_topic.id}
+      expect(response).to have_http_status(:success)
+    end
+
+    it "renders the show view" do
+      get :show, {id: my_topic.id}
+      expect(response).to render_template :show
+    end
+
+    it "assigns @topic to the specified topic" do
+      get :show, {id: my_topic.id}
+      expect(assigns(:topic)).to eq(my_topic)
+    end
+  end #end of the "GET show"
+
+  describe "GET new" do
+    it "returns http redirect" do
+      get :new
+      expect(response).to redirect_to(my_topic)
+    end
+  end # end GET new
+
+  describe "POST create" do
+    it "returns http redirect" do
+      post :create, {topic: {name:RandomData.random_sentence, description: RandomData.random_paragraph}}
+      expect(response).to redirect_to(my_topic)
+    end
+  end
+#end of the POST create tests
+
+describe "GET edit" do
+  it "returns http success" do
+    get :edit, {id: my_topic.id}
+    expect(response).to have_http_status(:success)
+  end
+  it "renders the edit view" do
+    get :edit, {id: my_topic.id}
+    expect(response).to render_template :edit
+  end
+
+  it "sets @topic to the specified topic" do
+    get :edit, {id: my_topic.id}
+    expect(assigns(:topic)).to eq(my_topic)
+    topic_instance = assigns(:topic)
+    expect(topic_instance.id).to eq(my_topic.id)
+    expect(topic_instance.name).to eq(my_topic.name)
+    expect(topic_instance.description).to eq(my_topic.description)
+  end
+end # end "GET edit tests"
+
+describe "PUT update" do
+  new_name = RandomData.random_name
+  new_description = RandomData.random_paragraph
+  it "updates topic with expected attributes" do
+    put :update, id: my_topic.id, topic: {name: new_name, description: new_description}
+
+    updated_topic = assigns(:topic)
+    expect(updated_topic.id).to eq(my_topic.id)
+    expect(updated_topic.name).to eq(new_name)
+    expect(updated_topic.description).to eq(new_description)
+  end
+
+  it "redirects to the updated topic" do
+    put :update, id: my_topic.id, topic: {name: new_name, description: new_description}
+    expect(response).to redirect_to my_topic
+  end
+end
+#end for the "PUT update" tests
+
+  describe  "DELETE destroy" do
+
+    it "returns http redirect" do
+      delete :destroy, {id: my_topic.id}
+      expect(response).to redirect_to(new_session_path)
+    end
+  end #end of the Delete destroy tests
+end # end of member context
+
+
+
+
 context "admin" do
   before do
     user = User.create!(name: "Bloccit User", email: "user@bloccit.com", password: "helloworld", role: :admin)
@@ -236,8 +343,7 @@ context "admin" do
       post :create, {topic: {name:RandomData.random_sentence, description: RandomData.random_paragraph}}
       expect(response).to redirect_to Topic.last
     end
-  end
-#end of the POST creat tests
+  end  #end of the POST create tests
 
   describe "GET edit" do
     it "returns http success" do
@@ -275,7 +381,8 @@ context "admin" do
       put :update, id: my_topic.id, topic: {name: new_name, description: new_description}
       expect(response).to redirect_to my_topic
     end
-  end #end for the "PUT update" tests
+  end
+  #end for the "PUT update" tests
 
   describe  "DELETE destroy" do
     it "deletes the topic" do
@@ -287,8 +394,10 @@ context "admin" do
       delete :destroy, {id: my_topic.id}
       expect(response).to redirect_to topics_path
     end
-  end #end of the Delete destroy tests
-end  #end of admin context
+  end
+  #end of the Delete destroy tests
+end
+#end of admin context
 
 
 end #end for the RSpec TopicsController
