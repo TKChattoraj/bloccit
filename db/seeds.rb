@@ -36,6 +36,22 @@ end
 user = User.first
 user.update_attributes!(email: 'kumar.chattoraj@gmail.com', password: 'hellowworld')
 
+#create an admin
+admin = User.create!(
+  name:  'Admin User',
+  email: 'admin@example.com',
+  password: 'helloworld',
+  role: 'admin'
+)
+
+#create a member
+member = User.create!(
+  name:  "Member User",
+  email:  "member@example.com",
+  password:  "heloworld_from_member",
+  roel:  "member"
+)
+
 
 puts "Seed finished"
 puts "#{Topic.count} topics created"
