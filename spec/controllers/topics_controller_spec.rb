@@ -209,14 +209,14 @@ context "moderator user" do
   describe "GET new" do
     it "returns http redirect" do
       get :new
-      expect(response).to redirect_to(my_topic)
+      expect(response).to redirect_to(topics_path)
     end
   end # end GET new
 
   describe "POST create" do
     it "returns http redirect" do
       post :create, {topic: {name:RandomData.random_sentence, description: RandomData.random_paragraph}}
-      expect(response).to redirect_to(my_topic)
+      expect(response).to redirect_to(topics_path)
     end
   end
 #end of the POST create tests
@@ -264,7 +264,7 @@ end
 
     it "returns http redirect" do
       delete :destroy, {id: my_topic.id}
-      expect(response).to redirect_to(new_session_path)
+      expect(response).to redirect_to(topics_path)
     end
   end #end of the Delete destroy tests
 end # end of member context
