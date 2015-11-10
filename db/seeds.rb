@@ -29,7 +29,8 @@ posts = Post.all
 100.times do
   Comment.create!(
     post: posts.sample,
-    body: RandomData.random_paragraph
+    body: RandomData.random_paragraph,
+    user: users.sample
   )
 end
 
@@ -48,8 +49,8 @@ admin = User.create!(
 member = User.create!(
   name:  "Member User",
   email:  "member@example.com",
-  password:  "heloworld_from_member",
-  roel:  "member"
+  password:  "helloworld",
+  role:  "member"
 )
 
 
