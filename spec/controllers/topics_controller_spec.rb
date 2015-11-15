@@ -3,7 +3,7 @@ include RandomData
 include SessionsHelper
 
 RSpec.describe TopicsController, type: :controller do
-let (:my_topic) {Topic.create(name: RandomData.random_sentence, description: RandomData.random_paragraph)}
+let (:my_topic) {Topic.create(name: RandomData.random_sentence, description: RandomData.random_paragraph, rating_id: [1, 2, 3].sample)}
 
 context "guest" do
 
@@ -236,6 +236,19 @@ context "admin" do
       post :create, {topic: {name:RandomData.random_sentence, description: RandomData.random_paragraph}}
       expect(response).to redirect_to Topic.last
     end
+
+    it "assigns the rating to a new topic" do
+      severity = ["0", "1", "2"].sample
+      expected_rating = Rating.find_by(severity: severity.to_i)
+      post :create, {topic: {name:RandomData.random_sentence, description: RandomData.random_paragraph, rating: severity}}
+      resulting_rating = assigns(:topic).rating
+      expect(resulting_rating).to eq(expected_rating)
+    end
+
+
+
+
+
   end
 #end of the POST creat tests
 
@@ -262,13 +275,15 @@ context "admin" do
   describe "PUT update" do
     new_name = RandomData.random_name
     new_description = RandomData.random_paragraph
+    new_rating = ["0", "1", "2"].sample
     it "updates topic with expected attributes" do
-      put :update, id: my_topic.id, topic: {name: new_name, description: new_description}
+      put :update, id: my_topic.id, topic: {name: new_name, description: new_description, rating: new_rating}
 
       updated_topic = assigns(:topic)
       expect(updated_topic.id).to eq(my_topic.id)
       expect(updated_topic.name).to eq(new_name)
       expect(updated_topic.description).to eq(new_description)
+      expect(updated_topic.rating).to eq(Rating.update_rating(new_rating))
     end
 
     it "redirects to the updated topic" do

@@ -12,7 +12,7 @@ RSpec.describe PostsController, type: :controller do
 
   #let(:user) {User.create!(name: "Bloccit User", email: "user@bloccit.com", password: "helloworld")}
 
-  let(:my_post) {my_topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph, user: my_user)}
+  let(:my_post) {my_topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph, user: my_user, rating_id: [1, 2, 3].sample)}
 
   context "guest user" do
 
@@ -138,7 +138,8 @@ RSpec.describe PostsController, type: :controller do
      it "returns http redirect" do
        new_title = RandomData.random_sentence
        new_body = RandomData.random_paragraph
-       put :update, {topic_id: my_topic, id: my_post.id, post: {title: new_title, body: new_body}}
+       new_rating = ["0", "1", "2"].sample
+       put :update, {topic_id: my_topic, id: my_post.id, post: {title: new_title, body: new_body, rating: new_rating}}
        expect(response).to redirect_to [my_topic, my_post]
      end
    end
@@ -196,8 +197,16 @@ RSpec.describe PostsController, type: :controller do
         expect{post :create, topic_id: my_topic.id, post: {title: RandomData.random_sentence, body: RandomData.random_paragraph}}.to change(Post, :count).by(1)
       end
       it "assigns the new post to @post" do
-        post :create, topic_id: my_topic.id, post: {title: RandomData.random_sentence, body: RandomData.random_paragraph}
+        post :create, topic_id: my_topic.id, post: {title: RandomData.random_sentence, body: RandomData.random_paragraph, rating: ["0", "1", "2"].sample}
         expect(assigns(:post)).to eq(Post.last)
+      end
+
+      it "assigns the rating to a new post" do
+        severity = ["0", "1", "2"].sample
+        expected_rating = Rating.find_by(severity: severity.to_i)
+        post :create, topic_id: my_topic.id, post: {title: RandomData.random_sentence, body: RandomData.random_paragraph, rating: severity}
+        resulting_rating = assigns(:post).rating
+        expect(resulting_rating).to eq(expected_rating)
       end
 
       it "redirects to the new post" do
@@ -230,12 +239,14 @@ RSpec.describe PostsController, type: :controller do
       it "updates post with expected attributes" do
         new_title = RandomData.random_sentence
         new_body = RandomData.random_paragraph
-        put :update, {topic_id: my_topic, id: my_post.id, post: {title: new_title, body: new_body}}
+        new_rating = ["0", "1", "2"].sample
+        put :update, {topic_id: my_topic, id: my_post.id, post: {title: new_title, body: new_body, rating: new_rating}}
 
          updated_post = assigns(:post)
          expect(updated_post.id).to eq my_post.id
          expect(updated_post.title).to eq new_title
          expect(updated_post.body).to eq new_body
+         expect(updated_post.rating).to eq (Rating.update_rating(new_rating))
       end
 
       it "redirects to the updated post" do
@@ -336,11 +347,13 @@ RSpec.describe PostsController, type: :controller do
       it "updates post with expected attributes" do
         new_title = RandomData.random_sentence
         new_body = RandomData.random_paragraph
-        put :update, {topic_id: my_topic, id: my_post.id, post: {title: new_title, body: new_body}}
+        new_rating = ["0", "1", "2"].sample
+        put :update, {topic_id: my_topic, id: my_post.id, post: {title: new_title, body: new_body, rating: new_rating}}
         updated_post = assigns(:post)
         expect(updated_post.id).to eq(my_post.id)
         expect(updated_post.title).to eq(new_title)
         expect(updated_post.body).to eq(new_body)
+        expect(updated_post.rating).to eq(Rating.update_rating(new_rating))
       end
 
       it "redirects to the updated post" do

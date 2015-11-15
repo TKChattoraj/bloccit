@@ -1,10 +1,18 @@
 include RandomData
 
+# Create Ratings
+pg_rating = Rating.create!(severity: :PG)
+pg13_rating = Rating.create!(severity: :PG13)
+r_rating = Rating.create!(severity: :R)
+
+ratings = Rating.all
+
 #Create tables
 15.times do
   Topic.create!(
     name: RandomData.random_sentence,
-    description: RandomData.random_paragraph
+    description: RandomData.random_paragraph,
+    rating:  ratings.sample
     )
   end
 topics = Topic.all
@@ -20,7 +28,8 @@ users = User.all
     title: RandomData.random_sentence,
     body: RandomData.random_paragraph,
     topic: topics.sample,
-    user: users.sample
+    user: users.sample,
+    rating: ratings.sample
   )
 end
 posts = Post.all
@@ -33,6 +42,8 @@ posts = Post.all
     user: users.sample
   )
 end
+
+
 
 user = User.first
 user.update_attributes!(email: 'kumar.chattoraj@gmail.com', password: 'hellowworld')
@@ -59,3 +70,6 @@ puts "#{Topic.count} topics created"
 puts "#{User.count} users created"
 puts "#{Post.count} posts created and associated to a topic and user"
 puts "#{Comment.count} comments created and associated to a post"
+puts "#{pg_rating.severity} Rating created."
+puts "#{pg13_rating.severity} Rating created."
+puts "#{r_rating.severity} Rating created."
