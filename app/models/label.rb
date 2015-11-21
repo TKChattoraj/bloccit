@@ -1,5 +1,13 @@
 class Label < ActiveRecord::Base
   has_many :labelings
+  # def labelings
+  #   Labeling.where(label_id: self.id)
+  # end
+  # has_one :labeling
+  # def labeling
+  #   Labeling.where(label_id: self.id).limit(1)
+  # end
+  # TODO: remove labelable from label
   belongs_to :labelable, polymorphic: true
   has_many :topics, through: :labelings, source: :labelable, source_type: :Topic
   has_many :posts, through: :labelings, source: :labelable, source_type: :Post

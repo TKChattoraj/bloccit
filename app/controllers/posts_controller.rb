@@ -15,6 +15,7 @@ class PostsController < ApplicationController
   def create
     @topic = Topic.find(params[:topic_id])
     @post = @topic.posts.build(post_params)
+    @post.update_rank
     @post.user = current_user
 
     if @post.save
