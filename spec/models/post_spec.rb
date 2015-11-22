@@ -53,6 +53,7 @@ RSpec.describe Post, type: :model do
         expect(post.points).to eq(@up_votes-@down_votes)
       end
     end
+
     describe "#update_rank" do
       it "calculates the correct rank" do
         post.update_rank
@@ -67,10 +68,30 @@ RSpec.describe Post, type: :model do
 
       it "updates the rank when a down vote is created" do
         old_rank = post.rank
-        post.votes.create!(value:  -1)
+        post.votes.create!(value:  - 1)
         expect(post.rank).to eq(old_rank - 1)
       end
     end
+
+    describe "create_vote" do
+      it "is triggered after a post is created" do
+        new_post = topic.posts.new(title: "New Post", body: " This is the body for the new post", user: user)
+        expect(new_post).to receive(:create_vote)
+        new_post.save
+      end
+      it "gives a newly created post one up_vote from the creator" do
+        new_post = topic.posts.create!(title: "New Post", body: " This is the body for the new post", user: user)
+        expect(new_post.up_votes).to eq(1)
+      end
+
+      it "shows the user who made the post vote casts the first vote" do
+        new_post = topic.posts.create!(title: "New Post", body: " This is the body for the new post", user: user)
+        expect(new_post.votes.first.user).to eq(new_post.user)
+      end
+
+    end
+
+
 
 
   end
