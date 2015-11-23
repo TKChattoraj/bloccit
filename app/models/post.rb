@@ -5,6 +5,7 @@ class Post < ActiveRecord::Base
   has_many :labelings, as: :labelable
   has_many :labels, through: :labelings
   has_many :votes, dependent: :destroy
+  has_many :favorites, dependent: :destroy
 
   default_scope {order('rank DESC')}
 
@@ -33,7 +34,7 @@ class Post < ActiveRecord::Base
   # this works so long as the magnitude is of each value is 1.
 
   def update_rank
-   created_at = Time.new unless created_at
+   self.created_at = Time.new unless created_at
    age_in_days = (created_at - Time.new(1970,1,1))/ 1.day.seconds
    new_rank = points + age_in_days
    update_attribute(:rank, new_rank)
