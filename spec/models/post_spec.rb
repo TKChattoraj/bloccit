@@ -1,5 +1,6 @@
 require 'rails_helper'
 include RandomData
+include SessionsHelper
 
 RSpec.describe Post, type: :model do
 
@@ -74,7 +75,20 @@ RSpec.describe Post, type: :model do
         expect(post.rank).to eq(old_rank - 1)
       end
     end
-
-
   end
+
+  describe "automatic favorite for posts a user makes" do
+    it "favorites a user's new post" do
+      new_user = User.create!(name: "New Bloccit User", email: "new_bloccit_user@bloccit.com", password: "helloworld")
+      expect(new_user.favorites.count).to eq(0)
+      newly_created_post = topic.posts.create!(title: "New Post", body: RandomData.random_paragraph, user: new_user)
+      #expect(new_user.favorite_for(newly_created_post)).not_to be_nil
+      expect(new_user.favorite_for(newly_created_post)).to eq(Favorite.where(post: newly_created_post, user: new_user).first)
+    end
+  end
+
+
+
+
+
 end

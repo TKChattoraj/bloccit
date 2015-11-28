@@ -34,7 +34,7 @@ RSpec.describe Comment, type: :model do
 
        @another_comment.save
      end
- 
+
      it "does not send emails to users who haven't favorited the post" do
        expect(FavoriteMailer).not_to receive(:new_comment)
 
