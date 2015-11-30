@@ -80,7 +80,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "invalid user" do
-  
+
     let(:user_with_invalid_name) {build(:user, name: "")}
     let(:user_with_invalid_email) {build(:user, email: "")}
     let(:user_with_invalid_email_format) {build(:user, email: "invalid_format")}
@@ -122,5 +122,24 @@ RSpec.describe User, type: :model do
        expect(known_user.avatar_url(48)).to eq(expected_gravatar)
     end
   end
+
+  describe "user's favorites" do
+    let (:factory_user) {create(:user)}
+    let (:factory_post1) {create(:post)}
+    let (:factory_post2) {create(:post)}
+    let(:post1) {create (:post)}
+    let(:post2) {create (:post)}
+    #let(:favorite1) { Favorite.create!(post: post1, user: factory_user)}
+    #let(:favorite2) { Favorite.create!(post: post2, user: factory_user)}
+
+    it "returns an array of a user's favorite posts" do
+      favorite1 = Favorite.create!(post: post1, user: factory_user)
+      favroite2 = Favorite.create!(post: post2, user: factory_user)
+      post_array = [post1, post2]
+      expect(factory_user.find_favorite_posts).to eq(post_array)
+    end
+  end
+
+
 
 end

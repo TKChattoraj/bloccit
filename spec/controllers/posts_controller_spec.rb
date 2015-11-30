@@ -13,7 +13,7 @@ RSpec.describe PostsController, type: :controller do
 
   #let(:user) {User.create!(name: "Bloccit User", email: "user@bloccit.com", password: "helloworld")}
 
-  let(:my_post) {my_topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph, user: my_user)}
+  #let(:my_post) {my_topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph, user: my_user)}
 
   context "guest user" do
 

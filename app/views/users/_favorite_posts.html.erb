@@ -1,0 +1,26 @@
+<div class="media">
+   <div class="media-body">
+     <h4 class="media-heading">
+       <%= link_to post.title, topic_post_path(post.topic, post) %>
+     </h4>
+     <small>
+        <div class = "row">
+          <% avatar_url = post.user.avatar_url(12) %>
+          <% if avatar_url %>
+            <div class = "col-md-2" >
+             submitted by:
+               <div class="pull-right">
+                 <%= image_tag avatar_url, class: 'media-object' %>
+               </div>
+            </div>
+          <% else %>
+            <div>
+             submitted by: <%= post.user.name %>
+            </div>
+          <% end %>
+        </div>
+       <%= post.votes.count %> Votes
+       <%= post.comments.count %> Comments
+     </small>
+   </div>
+ </div>

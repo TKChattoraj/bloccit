@@ -33,7 +33,15 @@ class User < ActiveRecord::Base
     "http://gravatar.com/avatar/#{gravatar_id}.png?s=#{size}"
   end
 
-  
+  def find_favorite_posts
+    favorite_posts_array = Array.new
+    self.favorites.each do |fav|
+      favorite_posts_array << Post.find(fav.post_id)
+    end
+    favorite_posts_array
+
+  end
+
 
 
 end

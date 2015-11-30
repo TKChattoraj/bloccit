@@ -84,6 +84,29 @@ RSpec.describe UsersController, type: :controller do
     end
   end
 
+  describe "it finds a user's favorite posts" do
+    let(:factory_user) {create(:user)}
+    let(:post1) {create(:post)}
+    let(:post2) {create(:post)}
+    it "assigns a user's favorites to @favorites" do
+      favorite1 = Favorite.create!(post: post1, user: factory_user)
+      favorite2 = Favorite.create!(post: post2, user: factory_user)
+      get :show, {id: factory_user.id}
+      expect(assigns(:favorites)).to eq([favorite1, favorite2])
+    end
+
+    it "assigns a user's favorite posts to @favorite_posts" do
+      favorite1 = Favorite.create!(post: post1, user: factory_user)
+      favorite2 = Favorite.create!(post: post2, user: factory_user)
+      post_array = [post1, post2]
+      get :show, {id: factory_user.id}
+      expect(assigns(:favorite_posts)).to eq(post_array)
+    end
+  end
+
+
+
+
 
 
 end
