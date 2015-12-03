@@ -1,10 +1,13 @@
 class User < ActiveRecord::Base
   # attr_accessor :password, :password_confirmation
 
-  has_many :posts, dependent: :destroy
-  has_many :comments, dependent: :destroy
-  has_many :votes, dependent: :destroy
+  has_many :posts, dependent: :destroy#, class_name: 'Post'
+  has_many :comments, dependent: :destroy#, class_name: 'Comment', foreign_key: 'user_id'
+  has_many :votes, dependent: :destroy#, class_name: 'Vote', foreign_key: 'user_id'
   has_many :favorites, dependent: :destroy
+  has_many :favorited_posts, through: :favorites, class_name: 'Post', foreign_key: 'post_id'
+  # @user.posts
+  # @user.favorited_posts
 
   before_save {self.email = email.downcase}
   before_save {self.role ||= :member}
@@ -39,7 +42,9 @@ class User < ActiveRecord::Base
       favorite_posts_array << Post.find(fav.post_id)
     end
     favorite_posts_array
-
+    # new_array = self.favorites.map do |fav|
+    #   Post.find(fav.post_id)
+    # end
   end
 
 

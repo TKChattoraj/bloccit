@@ -107,6 +107,9 @@ RSpec.describe User, type: :model do
 
       it "returns `nil` if the user has not favorited the post" do
        expect(user.favorite_for(@post)).to be_nil
+
+      # Post.expects(:create).times(1).returns(true)
+      # Post.method_that_triggers_create
       end
 
       it "returns the appropriate favorite if it exists" do
