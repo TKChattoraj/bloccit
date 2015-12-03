@@ -37,14 +37,9 @@ class User < ActiveRecord::Base
   end
 
   def find_favorite_posts
-    favorite_posts_array = Array.new
-    self.favorites.each do |fav|
-      favorite_posts_array << Post.find(fav.post_id)
+    fav_array = self.favorites.map do |fav|
+      Post.find(fav.post_id)
     end
-    favorite_posts_array
-    # new_array = self.favorites.map do |fav|
-    #   Post.find(fav.post_id)
-    # end
   end
 
 
