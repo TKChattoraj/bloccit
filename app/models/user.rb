@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
     "http://gravatar.com/avatar/#{gravatar_id}.png?s=#{size}"
   end
 
-  
+
 
 
 end

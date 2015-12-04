@@ -80,7 +80,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "invalid user" do
-  
+
     let(:user_with_invalid_name) {build(:user, name: "")}
     let(:user_with_invalid_email) {build(:user, email: "")}
     let(:user_with_invalid_email_format) {build(:user, email: "invalid_format")}

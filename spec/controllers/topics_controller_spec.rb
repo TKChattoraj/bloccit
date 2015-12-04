@@ -4,10 +4,16 @@ include SessionsHelper
 
 RSpec.describe TopicsController, type: :controller do
 let(:my_topic) {create(:topic)}
+let(:my_private_topic) {create(:topic, public: false)}
 
 context "guest" do
 
   describe "GET index" do
+   it "does not include private topics in @topics" do
+     get :index
+     expect(assigns(:topics)).not_to include(my_private_topic)
+   end
+
     it "returns http success" do
      get :index
      expect(response).to have_http_status(:success)
@@ -40,6 +46,12 @@ context "guest" do
       get :show, {id: my_topic.id}
       expect(assigns(:topic)).to eq(my_topic)
     end
+    it "redirects to the login view if the topic is private" do
+      get :show, {id: my_private_topic.id}
+      expect(response).to redirect_to(new_session_path)
+    end
+
+
   end #end of the "GET show"
 
   describe "GET new" do
@@ -102,7 +114,7 @@ context "member user" do
 
     it "assigns @topics to the array of all topics" do
       get :index
-      expect(assigns(:topics)).to eq([my_topic])
+      expect(assigns(:topics)).to eq([my_topic, my_private_topic])
     end
   end  #end of the  "Get Index"
 
@@ -184,7 +196,7 @@ context "admin" do
 
     it "assigns @topics to the array of all topics" do
       get :index
-      expect(assigns(:topics)).to eq([my_topic])
+      expect(assigns(:topics)).to eq([my_topic, my_private_topic])
     end
   end  #end of the  "Get Index"
 
