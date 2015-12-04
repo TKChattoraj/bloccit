@@ -34,7 +34,7 @@ RSpec.describe Topic, type: :model do
       it "returns all topics if the user is present" do
         user = User.new
         expect(Topic.visible_to(user)).to eq(Topic.all)
-      end 
+      end
       it "returns only the public topics if the user is not logged in" do
         expect(Topic.visible_to(nil)).to eq([@public_topic])
       end
