@@ -17,6 +17,24 @@ class Api::V1::BaseController < ApplicationController
     end
   end
 
+  def authorize_for_update_destroy_post
+    post = Post.find(params[:id])
+    unless @current_user && ((@current_user == post.user) || @current_user.admin?)
+      render json: {error: "Not Authorized", status: 403}, status: 403
+    end
+  end
+
+  # def authorize_user_for_post
+  #   unless @current_user
+  #     render json: {error: "Not Authorized", status: 403}, status:
+  #     403
+  #   end
+  # end
+
+
+
+
+
   def malformed_request
     render json: {error: "The request could not be understood by the server due to malformed syntax.  The client SHOULD NOT repeatn without modifications.", status: 400}, status:  400
   end

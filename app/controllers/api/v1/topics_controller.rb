@@ -1,7 +1,7 @@
 class Api::V1::TopicsController < Api::V1::BaseController
 
   before_filter :authenticate_user, except: [:index, :show]
-  before_filter :authorize_user, except: [:index, :show]
+  before_filter :authorize_user, except: [:index, :show, :create_post]
 
   def index
     topics = Topic.all
@@ -45,10 +45,39 @@ class Api::V1::TopicsController < Api::V1::BaseController
     end
   end
 
+  def create_post
+
+    @topic = Topic.find(params[:topic_id])
+    @post = @topic.posts.build(post_params)
+    @post.update_rank
+    @post.user = @current_user
+
+
+    #
+    # post_parameters = post_params
+    # puts post_parameters
+    # @post = Post.new(post_parameters)
+    # @post.topic_id = params[:topic]
+    if @post.valid?
+      @post.save!
+      render json: @post.to_json, status: 200
+    else
+      puts @post.title
+      puts @post.body
+      puts @post.user.name
+      puts "Topic: #{@post.topic}"
+      puts "post not valid"
+      render json: {error: "The Post is invalid", status: 400}, status: 400
+    end
+  end
+
 
   private
   def topic_params
     params.require(:topic).permit(:name, :description, :public)
+  end
+  def post_params
+    params.require(:post).permit(:title, :body)
   end
 
 end

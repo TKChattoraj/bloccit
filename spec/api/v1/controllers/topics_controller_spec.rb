@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Api::V1::TopicsController, type: :controller do
   let(:my_user) { create(:user) }
   let(:my_topic) {create(:topic)}
+  #let(:my_post) {create(:post, title: "New Post Title", body: "New Post Title Body", user: my_user.id, topic: my_topic.id)}
 
   context "unathenticated user" do
     it "GET index returns http success" do
@@ -29,6 +30,12 @@ RSpec.describe Api::V1::TopicsController, type: :controller do
       delete :destroy, id: my_topic.id
       expect(response).to have_http_status(401)
     end
+
+    it "POST create post returns http unauthenticated" do
+      post :create_post, topic_id: my_topic.id, post: {title: "New Post Title", body: "New Post Body that is long enough"}
+      expect(response).to have_http_status(401)
+    end
+
   end
 
   context "unauthorized user" do
@@ -112,8 +119,6 @@ RSpec.describe Api::V1::TopicsController, type: :controller do
         @ident = my_topic.id
         delete :destroy, id: my_topic.id
       end
-
-
       it "returns http success" do
         expect(response).to have_http_status(:success)
       end
@@ -129,4 +134,54 @@ RSpec.describe Api::V1::TopicsController, type: :controller do
       end
     end
   end
+  context "authenticated and authorized member creating a post" do
+    before do
+      my_user.member!
+      controller.request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials(my_user.auth_token)
+      post :create_post, topic_id: my_topic.id, post: {title: "New Post Title", body: "New Post Body that is long enough", user_id: my_user.id, topic_id: my_topic.id}
+    end
+
+    it "returns http success" do
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns json content type" do
+      expect(response.content_type).to eq "application/json"
+    end
+
+    it "creates a new post with the given attributes" do
+      @newly_created_post = Post.last
+      puts @new_created_post
+      hashed_json = JSON.parse(response.body)
+      expect(hashed_json["title"]).to eq @newly_created_post.title
+      expect(hashed_json["body"]).to eq @newly_created_post.body
+    end
+  end
+
+  context "authenticated and authorized admin creating a post" do
+    before do
+      my_user.admin!
+      controller.request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Token.encode_credentials(my_user.auth_token)
+      post :create_post, topic_id: my_topic.id, post: {title: "New Post Title", body: "New Post Body that is long enough", user_id: my_user.id, topic_id: my_topic.id}
+    end
+
+    it "returns http success" do
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns json content type" do
+      expect(response.content_type).to eq "application/json"
+    end
+
+    it "creates a new post with the given attributes" do
+      @newly_created_post = Post.last
+      puts @new_created_post
+      hashed_json = JSON.parse(response.body)
+      expect(hashed_json["title"]).to eq @newly_created_post.title
+      expect(hashed_json["body"]).to eq @newly_created_post.body
+    end
+  end
+
+
+
 end
